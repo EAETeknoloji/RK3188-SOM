@@ -358,6 +358,19 @@ struct goodix_platform_data {
 	void (*exit_platform_hw)(void);
 };
 
+// atmel icin platform data yapisi
+
+struct atmel_mxt1664_platform_data {
+	int model ;
+	int rest_pin;
+	int irq_pin ;
+	int (*get_pendown_state)(void);
+	int (*init_platform_hw)(void);
+	int (*platform_sleep)(void);
+	int (*platform_wakeup)(void);
+	void (*exit_platform_hw)(void);
+};
+
 struct tp_platform_data {
 	int model;
 	int x_max;
@@ -574,7 +587,7 @@ void __sramfunc board_pmu_resume(void);
  * For DDR frequency scaling setup. Board code something like this:
  *
  * This array _must_ be sorted in ascending frequency (without DDR_FREQ_*) order.
- * 必须按频率（不必考虑DDR_FREQ_*）递增�? *static struct cpufreq_frequency_table dvfs_ddr_table[] = {
+ * 必须按频率（不必考虑DDR_FREQ_*）递增�? *static struct cpufreq_frequency_table dvfs_ddr_table[] = {
  *	{.frequency = 200 * 1000 + DDR_FREQ_SUSPEND,	.index = xxxx * 1000},
  *	{.frequency = 200 * 1000 + DDR_FREQ_IDLE,	.index = xxxx * 1000},
  *	{.frequency = 300 * 1000 + DDR_FREQ_VIDEO,	.index = xxxx * 1000},
