@@ -108,3 +108,4 @@ obj-y += zet62xx/
 obj-y += aw5x0x/
 obj-$(CONFIG_TOUCHSCREEN_AR1020_I2C)	+= ar1020-i2c.o
 obj-$(CONFIG_TOUCHSCREEN_AR1020_SPI)	+= ar1020-spi.o
+obj-$(CONFIG_TOUCHSCREEN_ATMEL_MXT1664) += atmel_mxt1664_ts.o

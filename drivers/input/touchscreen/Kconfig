@@ -1123,4 +1123,16 @@ config TOUCHSCREEN_AR1020_SPI
           To compile this driver as a module, choose M here: the
           module will be called ar1020-spi.
 
+config TOUCHSCREEN_ATMEL_MXT1664
+		tristate "Atmel mXT 1664 I2C Touchscreen"
+		depends on I2C
+		help
+			Say Y here if you have Atmel mXT 1664 series I2C touchscreen
+			connected to your system
+
+			if unsure, say N.
+
+			To compile this driver as a module, choose M here: the
+			module will be called atmel_mxt1664_ts.
+
 endif

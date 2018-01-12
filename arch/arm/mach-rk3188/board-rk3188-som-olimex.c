@@ -94,6 +94,52 @@
 
 #include "../mach-rk30/board-rk3168-tb-camera.c"
 
+// Atmel mxt1664 ts R.B.G
+
+//#if defined (CONFIG_TOUCHSCREEN_ATMEL_MXT1664)
+	
+	#define TOUCH_INT_PIN 	RK30_PIN0_PA6
+	#define TOUCH_RESET_PIN RK30_PIN0_PA7
+
+	int atmel_mxt1664_init_platform_hw(void)
+	{
+		printk(KERN_DEBUG "init platform hw invoked.");
+		
+		if(gpio_request(TOUCH_INT_PIN,NULL) != 0) {
+			gpio_free(TOUCH_INT_PIN);
+			printk(KERN_DEBUG "mxt1664_ts int gpio request err.\n");
+			return -EIO;
+		}
+
+		printk(KERN_DEBUG "int gpio request success.\n");
+
+		if(gpio_request(TOUCH_RESET_PIN,NULL) != 0) {
+			gpio_free(TOUCH_RESET_PIN);
+			printk(KERN_DEBUG "reset gpio request err.\n");
+			return -EIO;
+		}
+
+		printk(KERN_DEBUG "reset gpio request success.\n");
+
+		gpio_direction_output(TOUCH_RESET_PIN, 0);
+		msleep(100);
+		gpio_set_value(TOUCH_RESET_PIN, 1);
+		msleep(500);
+
+		printk(KERN_DEBUG "controller waked up!.\n");
+		return 0;
+	}
+
+	struct atmel_mxt1664_platform_data atmel_mxt1664_info = {
+		.model = 1664,
+		.irq_pin = TOUCH_INT_PIN,
+		.init_platform_hw = atmel_mxt1664_init_platform_hw,
+	};
+
+//#endif
+
+// Atmel mxt1664
+
 #if defined (CONFIG_TOUCHSCREEN_86V_GT811_IIC)
 #define TOUCH_RESET_PIN  RK30_PIN0_PA7
 #define TOUCH_INT_PIN    RK30_PIN0_PA6
@@ -1555,8 +1601,21 @@ static struct rkdisplay_platform_data vga_data = {
 #endif
 
 // i2c
-#ifdef CONFIG_I2C0_RK30
+//#ifdef CONFIG_I2C0_RK30
 static struct i2c_board_info __initdata i2c0_info[] = {
+
+// atmel_mxt1664 
+//#if defined (CONFIG_TOUCHSCREEN_ATMEL_MXT1664)
+{
+	.type	= "mxt1664_ts",
+	.addr 	= 0x4b,
+	.flags	= 0,
+	.irq	= TOUCH_INT_PIN,
+	.platform_data = &atmel_mxt1664_info,
+},
+//#endif
+// atmel_mxt1664 haricinde i2c0 i kullananlar iptal edildi
+/*
 #if defined (CONFIG_TOUCHSCREEN_86V_GT811_IIC)
 {
 	.type          = "gt811_ts",
@@ -1609,9 +1668,10 @@ static struct i2c_board_info __initdata i2c0_info[] = {
                 .flags                  = 0,
         },
 #endif
+*/
 
 };
-#endif
+//#endif
 
 int __sramdata g_pmic_type =  0;
 #ifdef CONFIG_I2C1_RK30
@@ -2226,9 +2286,9 @@ static struct i2c_board_info __initdata i2c_gpio_info[] = {
 
 static void __init rk30_i2c_register_board_info(void)
 {
-#ifdef CONFIG_I2C0_RK30
+//#ifdef CONFIG_I2C0_RK30
 	i2c_register_board_info(0, i2c0_info, ARRAY_SIZE(i2c0_info));
-#endif
+//#endif
 #ifdef CONFIG_I2C1_RK30
 	i2c_register_board_info(1, i2c1_info, ARRAY_SIZE(i2c1_info));
 #endif
